@@ -478,7 +478,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               // Tab 1: SEARCH
-              const SearchScreen(),
+              SearchScreen(
+                onLocationSelected: (location) {
+                  setState(() {
+                    _currentTabIndex = 0; // Pindah otomatis kembali ke tab Today / Cuaca
+                  });
+                },
+                onBack: () {
+                  setState(() {
+                    _currentTabIndex = 0; // Pindah kembali ke tab Today
+                  });
+                },
+              ),
 
               // Tab 2: SETTINGS
               SettingsScreen(

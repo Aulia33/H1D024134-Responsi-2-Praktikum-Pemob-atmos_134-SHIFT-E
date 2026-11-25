@@ -4,9 +4,17 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/location_model.dart';
 import '../../viewmodels/location_viewmodel.dart';
+import '../../viewmodels/weather_viewmodel.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final Function(LocationModel location)? onLocationSelected;
+  final VoidCallback? onBack;
+
+  const SearchScreen({
+    super.key,
+    this.onLocationSelected,
+    this.onBack,
+  });
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -32,7 +40,19 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onCitySelected(LocationModel location) {
-    Navigator.of(context).pop(location);
+    // 1. Ambil data cuaca kota yang dipilih secara langsung
+    final weatherVM = Provider.of<WeatherViewModel>(context, listen: false);
+    weatherVM.fetchWeatherForLocation(location);
+
+    // 2. Panggil callback jika dibuka dari tab bar untuk kembali ke tab Today
+    if (widget.onLocationSelected != null) {
+      widget.onLocationSelected!(location);
+    }
+
+    // 3. Hanya lakukan pop jika screen ini dibuka menggunakan Navigator.push
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop(location);
+    }
   }
 
   @override
@@ -50,10 +70,18 @@ class _SearchScreenState extends State<SearchScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(CupertinoIcons.back, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            leading: (Navigator.of(context).canPop() || widget.onBack != null)
+                ? IconButton(
+                    icon: const Icon(CupertinoIcons.back, color: Colors.white),
+                    onPressed: () {
+                      if (widget.onBack != null) {
+                        widget.onBack!();
+                      } else if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  )
+                : null,
             title: const Text(
               'Cari Lokasi & Cuaca',
               style: TextStyle(
