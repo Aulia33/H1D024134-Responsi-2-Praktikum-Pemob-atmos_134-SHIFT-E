@@ -70,6 +70,12 @@ void main() {
         "weather_code": 80,
         "wind_speed_10m": 6.5
       },
+      "hourly": {
+        "time": ["2026-11-25T16:00"],
+        "temperature_2m": [26.5],
+        "weather_code": [80],
+        "precipitation_probability": [85]
+      },
       "daily": {
         "time": ["2026-11-25"],
         "weather_code": [80],

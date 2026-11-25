@@ -1,116 +1,95 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Brand Colors - Sky inspired
-  static const Color primaryBlue = Color(0xFF0F4C81); // Deep Classic Blue
-  static const Color skyBlue = Color(0xFF0288D1);     // Vivid Sky Blue
-  static const Color lightSkyBlue = Color(0xFF4FC3F7);// Soft Atmosphere Blue
-  static const Color cloudWhite = Color(0xFFF8FAFC);  // Pristine Cloud White
-  static const Color cardSurface = Colors.white;
-  static const Color darkSlate = Color(0xFF0F172A);   // Text Primary
-  static const Color mutedSlate = Color(0xFF64748B);  // Text Secondary
-  static const Color accentCyan = Color(0xFF00ACC1);
-  static const Color accentAmber = Color(0xFFFFA000); // Sun
-  static const Color accentRed = Color(0xFFE53935);   // Heart / Alert
+  // Brand Palette from Design System
+  static const Color primary = Color(0xFFFB7185);     // Coral Rose Pink #FB7185
+  static const Color secondary = Color(0xFFFB923C);   // Sunset Orange #FB923C
+  static const Color tertiary = Color(0xFFFBCFE8);    // Soft Pink #FBCFE8
+  static const Color neutralBg = Color(0xFF180E1B);   // Midnight Dark Plum #180E1B
 
-  // Sky Gradients
-  static const LinearGradient dayClearGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFF0277BD),
-      Color(0xFF0288D1),
-      Color(0xFF81D4FA),
-      Color(0xFFE1F5FE),
-    ],
-    stops: [0.0, 0.35, 0.75, 1.0],
-  );
+  // Card Surfaces & Borders
+  static const Color cardSurface = Color(0xFF25172A);
+  static const Color cardSurfaceElevated = Color(0xFF2F1D35);
+  static const Color cardBorder = Color(0xFF3E2746);
+  static const Color cardBorderLight = Color(0xFF563660);
 
-  static const LinearGradient nightClearGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFF0A192F),
-      Color(0xFF102A4C),
-      Color(0xFF1E3A8A),
-      Color(0xFF3B82F6),
-    ],
-    stops: [0.0, 0.35, 0.75, 1.0],
-  );
+  // Text Colors
+  static const Color textPrimary = Colors.white;
+  static const Color textSecondary = Color(0xFFE2D4E4);
+  static const Color textMuted = Color(0xFFA18A9F);
 
-  static const LinearGradient rainyGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFF263238),
-      Color(0xFF37474F),
-      Color(0xFF455A64),
-      Color(0xFF78909C),
-    ],
-    stops: [0.0, 0.3, 0.7, 1.0],
-  );
-
-  static const LinearGradient cloudyGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFF455A64),
-      Color(0xFF607D8B),
-      Color(0xFF90A4AE),
-      Color(0xFFCFD8DC),
-    ],
-    stops: [0.0, 0.3, 0.7, 1.0],
-  );
-
-  static const LinearGradient cardGlassGradient = LinearGradient(
+  // Gradient accents
+  static const LinearGradient heroCardGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0x33FFFFFF),
-      Color(0x1AFFFFFF),
+      Color(0xFF381B38),
+      Color(0xFF28142C),
+      Color(0xFF200E24),
     ],
   );
 
-  // Material Theme
-  static ThemeData get lightTheme {
+  static const LinearGradient coralOrangeGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFFFB7185),
+      Color(0xFFFB923C),
+    ],
+  );
+
+  static const LinearGradient orangePinkBarGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFFFB923C),
+      Color(0xFFFB7185),
+    ],
+  );
+
+  static const LinearGradient activeTabGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFFB7185),
+      Color(0xFFFB923C),
+    ],
+  );
+
+  // Material 3 Theme
+  static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: skyBlue,
-        brightness: Brightness.light,
-        primary: skyBlue,
-        surface: cloudWhite,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: neutralBg,
+      colorScheme: const ColorScheme.dark(
+        primary: primary,
+        secondary: secondary,
+        tertiary: tertiary,
+        surface: cardSurface,
+        onSurface: textPrimary,
       ),
-      scaffoldBackgroundColor: cloudWhite,
-      fontFamily: 'Roboto',
+      fontFamily: 'sans-serif',
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.3,
         ),
       ),
       cardTheme: CardThemeData(
-        elevation: 2,
-        color: Colors.white,
+        elevation: 0,
+        color: cardSurface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: cardBorder, width: 1.2),
         ),
         margin: EdgeInsets.zero,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
       ),
     );
   }

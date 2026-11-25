@@ -40,7 +40,7 @@ class AtmosApp extends StatelessWidget {
       child: MaterialApp(
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: const SplashScreen(),
       ),
     );

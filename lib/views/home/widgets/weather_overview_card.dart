@@ -1,174 +1,270 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../../../core/utils/date_helper.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/weather_helper.dart';
 import '../../../models/weather_model.dart';
 
 class WeatherOverviewCard extends StatelessWidget {
   final WeatherModel weather;
+  final bool isCelsius;
 
-  const WeatherOverviewCard({super.key, required this.weather});
+  const WeatherOverviewCard({
+    super.key,
+    required this.weather,
+    this.isCelsius = true,
+  });
+
+  double _convertTemp(double celsius) {
+    if (isCelsius) return celsius;
+    return (celsius * 9 / 5) + 32;
+  }
 
   @override
   Widget build(BuildContext context) {
     final current = weather.current;
     final info = WeatherHelper.getInfo(current.weatherCode);
 
-    // Get today's min and max from daily list if available
     double? tempMax;
     double? tempMin;
     if (weather.daily.isNotEmpty) {
-      tempMax = weather.daily.first.temperatureMax;
-      tempMin = weather.daily.first.temperatureMin;
+      tempMax = _convertTemp(weather.daily.first.temperatureMax);
+      tempMin = _convertTemp(weather.daily.first.temperatureMin);
     }
+
+    final currentTemp = _convertTemp(current.temperature).round();
+    final apparentTemp = _convertTemp(current.apparentTemperature).round();
+    final unit = isCelsius ? '°' : '°F';
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
-        borderRadius: BorderRadius.circular(32),
+        color: AppTheme.cardSurface,
+        borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: Colors.white.withOpacity(0.35),
+          color: AppTheme.cardBorder,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 24,
+            color: AppTheme.primary.withOpacity(0.08),
+            blurRadius: 30,
             offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Weather condition icon & label badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.22),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  info.icon,
-                  size: 20,
-                  color: info.iconColor,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  info.label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.3,
+          // Top row: Condition Badge & Visual Art Container
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Weather Condition Badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.18),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppTheme.primary.withOpacity(0.4),
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // Big Main Temperature
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                current.temperature.round().toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 88,
-                  fontWeight: FontWeight.w200,
-                  height: 1.0,
-                  letterSpacing: -2.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      info.icon,
+                      size: 15,
+                      color: AppTheme.primary,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      info.englishLabel.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '°C',
-                  style: TextStyle(
+
+              // Aesthetic Sun & Cloud Art Container
+              Container(
+                width: 72,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFB7185), Color(0xFFFB923C)],
+                  ),
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primary.withOpacity(0.3),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    info.icon,
+                    size: 26,
                     color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
 
-          // Apparent temperature (Suhu yang dirasakan)
-          Text(
-            'Terasa seperti ${current.apparentTemperature.round()}°C',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.92),
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-            ),
+          // Main Temperature + Feels Like
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                '$currentTemp$unit',
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 70,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: -2.0,
+                  height: 1.0,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Text(
+                'Feels $apparentTemp$unit',
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
-          // High / Low temperatures for today
-          if (tempMax != null && tempMin != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      CupertinoIcons.arrow_up,
-                      size: 14,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(width: 3),
-                    Text(
-                      'T: ${tempMax.round()}°',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Row(
-                  children: [
-                    const Icon(
-                      CupertinoIcons.arrow_down,
-                      size: 14,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(width: 3),
-                    Text(
-                      'R: ${tempMin.round()}°',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                if (current.time.isNotEmpty) ...[
-                  const SizedBox(width: 16),
+          // High / Low + Weather note
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
                   Text(
-                    '•  Pukul ${DateHelper.formatTime(current.time)}',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.85),
+                    'H: ${tempMax?.round() ?? currentTemp}$unit',
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
                       fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'L: ${tempMin?.round() ?? currentTemp}$unit',
+                    style: const TextStyle(
+                      color: AppTheme.textMuted,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
-              ],
-            ),
+              ),
+              Text(
+                info.label,
+                style: const TextStyle(
+                  color: AppTheme.secondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          const Divider(color: AppTheme.cardBorder, height: 1),
+          const SizedBox(height: 16),
+
+          // Inner Bottom 3-Column Metrics (Wind, Humidity, Rain)
+          Row(
+            children: [
+              Expanded(
+                child: _miniStat(
+                  icon: CupertinoIcons.wind,
+                  label: 'Wind',
+                  value: '${current.windSpeed.toStringAsFixed(1)} km/h',
+                  sub: current.windSpeed > 15 ? 'Breezy' : 'Gentle',
+                ),
+              ),
+              Container(width: 1, height: 36, color: AppTheme.cardBorder),
+              Expanded(
+                child: _miniStat(
+                  icon: CupertinoIcons.drop,
+                  label: 'Humidity',
+                  value: '${current.relativeHumidity}%',
+                  sub: current.relativeHumidity > 75 ? 'Humid' : 'Normal',
+                ),
+              ),
+              Container(width: 1, height: 36, color: AppTheme.cardBorder),
+              Expanded(
+                child: _miniStat(
+                  icon: CupertinoIcons.cloud_rain,
+                  label: 'Precipitation',
+                  value: '${current.precipitation.toStringAsFixed(1)} mm',
+                  sub: current.precipitation > 0 ? 'Rain' : 'Dry',
+                ),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _miniStat({
+    required IconData icon,
+    required String label,
+    required String value,
+    required String sub,
+  }) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 13, color: AppTheme.primary),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppTheme.textMuted,
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          sub,
+          style: const TextStyle(
+            color: AppTheme.textMuted,
+            fontSize: 10,
+          ),
+        ),
+      ],
     );
   }
 }

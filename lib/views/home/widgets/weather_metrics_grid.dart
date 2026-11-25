@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../models/weather_model.dart';
 
 class WeatherMetricsGrid extends StatelessWidget {
@@ -14,64 +15,146 @@ class WeatherMetricsGrid extends StatelessWidget {
         ? weather.daily.first.precipitationProbabilityMax
         : 0;
 
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 1.55,
+    return Column(
       children: [
-        // 1. Kelembapan Udara
-        _MetricCard(
-          icon: CupertinoIcons.drop_fill,
-          iconColor: Colors.lightBlueAccent,
-          label: 'Kelembapan Udara',
-          value: '${current.relativeHumidity}%',
-          subtitle: current.relativeHumidity > 80
-              ? 'Tinggi (Lembap)'
-              : current.relativeHumidity > 50
-                  ? 'Normal / Nyaman'
-                  : 'Kering',
-        ),
+        // 2x2 Grid of Required Metrics
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.55,
+          children: [
+            // 1. Kelembapan Udara
+            _MetricCard(
+              icon: CupertinoIcons.drop_fill,
+              iconColor: AppTheme.primary,
+              label: 'HUMIDITY',
+              value: '${current.relativeHumidity}%',
+              subtitle: current.relativeHumidity > 80
+                  ? 'High Humidity'
+                  : current.relativeHumidity > 50
+                      ? 'Comfortable'
+                      : 'Dry Air',
+            ),
 
-        // 2. Kecepatan Angin
-        _MetricCard(
-          icon: CupertinoIcons.wind,
-          iconColor: Colors.tealAccent,
-          label: 'Kecepatan Angin',
-          value: '${current.windSpeed.toStringAsFixed(1)} km/h',
-          subtitle: current.windSpeed > 20
-              ? 'Angin Kencang'
-              : current.windSpeed > 10
-                  ? 'Sepoi-sepoi'
-                  : 'Tenang',
-        ),
+            // 2. Kecepatan Angin
+            _MetricCard(
+              icon: CupertinoIcons.wind,
+              iconColor: AppTheme.secondary,
+              label: 'WIND SPEED',
+              value: '${current.windSpeed.toStringAsFixed(1)} km/h',
+              subtitle: current.windSpeed > 20
+                  ? 'Strong Breeze'
+                  : current.windSpeed > 10
+                      ? 'Moderate'
+                      : 'Light Breeze',
+            ),
 
-        // 3. Curah Hujan
-        _MetricCard(
-          icon: CupertinoIcons.cloud_rain_fill,
-          iconColor: Colors.cyanAccent,
-          label: 'Curah Hujan',
-          value: '${current.precipitation.toStringAsFixed(1)} mm',
-          subtitle: current.precipitation > 5.0
-              ? 'Hujan Deras'
-              : current.precipitation > 0.0
-                  ? 'Hujan Ringan'
-                  : 'Tidak Ada Hujan',
-        ),
+            // 3. Curah Hujan
+            _MetricCard(
+              icon: CupertinoIcons.cloud_rain_fill,
+              iconColor: AppTheme.tertiary,
+              label: 'PRECIPITATION',
+              value: '${current.precipitation.toStringAsFixed(1)} mm',
+              subtitle: current.precipitation > 5.0
+                  ? 'Heavy Showers'
+                  : current.precipitation > 0.0
+                      ? 'Light Rain'
+                      : 'No Rain',
+            ),
 
-        // 4. Peluang Hujan Hari Ini
-        _MetricCard(
-          icon: CupertinoIcons.umbrella_fill,
-          iconColor: Colors.indigoAccent.shade100,
-          label: 'Peluang Hujan',
-          value: '$rainProb%',
-          subtitle: rainProb > 60
-              ? 'Sedia Payung'
-              : rainProb > 30
-                  ? 'Kemungkinan Hujan'
-                  : 'Kecil Peluang Hujan',
+            // 4. Peluang Hujan Hari Ini
+            _MetricCard(
+              icon: CupertinoIcons.umbrella_fill,
+              iconColor: AppTheme.primary,
+              label: 'RAIN PROBABILITY',
+              value: '$rainProb%',
+              subtitle: rainProb > 60
+                  ? 'High Chance'
+                  : rainProb > 30
+                      ? 'Scattered Rain'
+                      : 'Low Chance',
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        // Outdoor Comfort Score Banner (From Reference Image 2)
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppTheme.cardSurface,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: AppTheme.cardBorder),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  CupertinoIcons.compass,
+                  size: 18,
+                  color: AppTheme.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Outdoor Comfort Score',
+                      style: TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Ideal for running, cycling & outdoor activities',
+                      style: TextStyle(
+                        color: AppTheme.textMuted,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.coralOrangeGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Row(
+                  children: [
+                    Text(
+                      '9.2',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(width: 3),
+                    Icon(
+                      CupertinoIcons.star_fill,
+                      color: Colors.white,
+                      size: 11,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -98,10 +181,10 @@ class _MetricCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: AppTheme.cardSurface,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: AppTheme.cardBorder,
           width: 1.2,
         ),
       ),
@@ -111,17 +194,18 @@ class _MetricCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: iconColor),
-              const SizedBox(width: 8),
+              Icon(icon, size: 14, color: iconColor),
+              const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.85),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  style: const TextStyle(
+                    color: AppTheme.textMuted,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
@@ -133,8 +217,8 @@ class _MetricCard extends StatelessWidget {
               Text(
                 value,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+                  color: AppTheme.textPrimary,
+                  fontSize: 20,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
                 ),
@@ -144,8 +228,8 @@ class _MetricCard extends StatelessWidget {
                 subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.75),
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
                   fontSize: 11,
                   fontWeight: FontWeight.w400,
                 ),

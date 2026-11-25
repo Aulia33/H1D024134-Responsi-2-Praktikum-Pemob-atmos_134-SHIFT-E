@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_helper.dart';
 import '../../../core/utils/weather_helper.dart';
 import '../../../models/weather_model.dart';
 
 class DailyForecastList extends StatelessWidget {
   final List<DailyForecast> daily;
+  final bool isCelsius;
 
-  const DailyForecastList({super.key, required this.daily});
+  const DailyForecastList({
+    super.key,
+    required this.daily,
+    this.isCelsius = true,
+  });
+
+  double _convertTemp(double celsius) {
+    if (isCelsius) return celsius;
+    return (celsius * 9 / 5) + 32;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,90 +28,82 @@ class DailyForecastList extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: AppTheme.cardSurface,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: Colors.white.withOpacity(0.32),
+          color: AppTheme.cardBorder,
           width: 1.2,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          // Header
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                CupertinoIcons.calendar,
-                size: 18,
-                color: Colors.white,
+              Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.calendar,
+                    size: 16,
+                    color: AppTheme.primary,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    '7-Day Outlook',
+                    style: TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              const Text(
-                'Perkiraan 7 Hari ke Depan',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              const Spacer(),
               Text(
-                'Open-Meteo',
+                'Open-Meteo Sync',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: AppTheme.textMuted,
                   fontSize: 11,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(color: Colors.white24, height: 1),
-          const SizedBox(height: 8),
+          const SizedBox(height: 14),
+          const Divider(color: AppTheme.cardBorder, height: 1),
+          const SizedBox(height: 10),
 
-          // Forecast rows
+          // 7-Day Rows
           ListView.separated(
             itemCount: daily.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             separatorBuilder: (context, index) =>
-                const Divider(color: Colors.white12, height: 16),
+                const Divider(color: AppTheme.cardBorder, height: 16),
             itemBuilder: (context, index) {
               final item = daily[index];
               final info = WeatherHelper.getInfo(item.weatherCode);
               final dayLabel = DateHelper.formatForecastDay(item.time, index);
-              final dateLabel = DateHelper.formatShortDate(item.time);
+              final isToday = index == 0;
+              final maxTemp = _convertTemp(item.temperatureMax).round();
+              final minTemp = _convertTemp(item.temperatureMin).round();
 
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: Row(
                   children: [
-                    // Day and date
+                    // Day name
                     SizedBox(
-                      width: 90,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            dayLabel,
-                            style: TextStyle(
-                              color: index == 0
-                                  ? Colors.amberAccent
-                                  : Colors.white,
-                              fontSize: 14,
-                              fontWeight: index == 0
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            dateLabel,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
+                      width: 72,
+                      child: Text(
+                        dayLabel,
+                        style: TextStyle(
+                          color: isToday ? AppTheme.primary : AppTheme.textSecondary,
+                          fontSize: 13,
+                          fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
+                        ),
                       ),
                     ),
 
@@ -111,80 +114,60 @@ class DailyForecastList extends StatelessWidget {
                         children: [
                           Icon(
                             info.icon,
-                            size: 20,
+                            size: 18,
                             color: info.iconColor,
                           ),
                           const SizedBox(width: 8),
-                          if (item.precipitationProbabilityMax > 20)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    CupertinoIcons.drop_fill,
-                                    size: 10,
-                                    color: Colors.lightBlueAccent,
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    '${item.precipitationProbabilityMax}%',
-                                    style: const TextStyle(
-                                      color: Colors.lightBlueAccent,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          Text(
+                            '${item.precipitationProbabilityMax}%',
+                            style: TextStyle(
+                              color: item.precipitationProbabilityMax > 20
+                                  ? AppTheme.primary
+                                  : AppTheme.textMuted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
                             ),
+                          ),
                         ],
                       ),
                     ),
 
                     // Min Temp
                     SizedBox(
-                      width: 38,
+                      width: 32,
                       child: Text(
-                        '${item.temperatureMin.round()}°',
+                        '$minTemp°',
                         textAlign: TextAlign.right,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.75),
-                          fontSize: 14,
+                        style: const TextStyle(
+                          color: AppTheme.textMuted,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
 
-                    // Temperature visual bar
-                    Container(
-                      width: 50,
-                      height: 5,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Colors.lightBlueAccent, Colors.orangeAccent],
+                    // Colored gradient temperature bar (Orange to Coral Pink)
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: 5,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          gradient: AppTheme.orangePinkBarGradient,
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
 
                     // Max Temp
                     SizedBox(
-                      width: 38,
+                      width: 32,
                       child: Text(
-                        '${item.temperatureMax.round()}°',
+                        '$maxTemp°',
                         textAlign: TextAlign.right,
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                          color: AppTheme.textPrimary,
+                          fontSize: 13,
                           fontWeight: FontWeight.w700,
                         ),
                       ),

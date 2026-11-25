@@ -64,56 +64,60 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.neutralBg,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: AppTheme.dayClearGradient,
+          gradient: RadialGradient(
+            center: Alignment(0, -0.2),
+            radius: 1.0,
+            colors: [
+              Color(0xFF381B38),
+              AppTheme.neutralBg,
+            ],
+          ),
         ),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              // Animated Logo & Cloud Visual
+              // Animated Logo Art (Coral Pink + Sunset Orange Glow)
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: ScaleTransition(
                   scale: _scaleAnimation,
                   child: Container(
-                    width: 140,
-                    height: 140,
+                    width: 130,
+                    height: 130,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      gradient: AppTheme.coralOrangeGradient,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 28,
-                          offset: const Offset(0, 12),
+                          color: AppTheme.primary.withOpacity(0.35),
+                          blurRadius: 36,
+                          offset: const Offset(0, 10),
                         ),
                       ],
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.4),
-                        width: 2,
-                      ),
                     ),
                     child: Center(
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.sun_max_fill,
-                            size: 56,
-                            color: Colors.amber.shade300,
+                            size: 52,
+                            color: Colors.white,
                           ),
                           Positioned(
-                            bottom: 24,
-                            right: 20,
+                            bottom: 20,
+                            right: 18,
                             child: Icon(
                               CupertinoIcons.cloud_fill,
-                              size: 48,
-                              color: Colors.white.withOpacity(0.95),
+                              size: 42,
+                              color: AppTheme.tertiary.withOpacity(0.95),
                             ),
                           ),
                         ],
@@ -134,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 42,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w900,
                         letterSpacing: 1.5,
                       ),
                     ),
@@ -143,9 +147,9 @@ class _SplashScreenState extends State<SplashScreen>
                     Text(
                       AppConstants.appTagline,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.92),
-                        fontSize: 16,
+                      style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 15,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.5,
                       ),
@@ -156,20 +160,20 @@ class _SplashScreenState extends State<SplashScreen>
 
               const Spacer(),
 
-              // Project Identifier & Loading Indicator
+              // Loading & Project Identifier
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 28.0),
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white.withOpacity(0.85),
+                            AppTheme.primary,
                           ),
                         ),
                       ),
@@ -180,18 +184,18 @@ class _SplashScreenState extends State<SplashScreen>
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.18),
+                          color: AppTheme.cardSurface,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: AppTheme.cardBorder,
                           ),
                         ),
                         child: const Text(
                           AppConstants.projectName,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
                             letterSpacing: 1.0,
                           ),
                         ),

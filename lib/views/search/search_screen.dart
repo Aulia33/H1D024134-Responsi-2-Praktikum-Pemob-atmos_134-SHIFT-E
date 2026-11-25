@@ -46,18 +46,18 @@ class _SearchScreenState extends State<SearchScreen> {
         final query = locationVM.currentQuery;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF1F5F9), // Light slate surface
+          backgroundColor: AppTheme.neutralBg,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(CupertinoIcons.back, color: AppTheme.darkSlate),
+              icon: const Icon(CupertinoIcons.back, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             ),
             title: const Text(
               'Cari Lokasi & Cuaca',
               style: TextStyle(
-                color: AppTheme.darkSlate,
+                color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
@@ -67,15 +67,14 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Column(
             children: [
               // Search Input Field
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 4, 18, 16),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppTheme.cardSurface,
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: const Color(0xFFE2E8F0),
+                      color: AppTheme.cardBorder,
                       width: 1.2,
                     ),
                   ),
@@ -84,25 +83,25 @@ class _SearchScreenState extends State<SearchScreen> {
                     focusNode: _focusNode,
                     textInputAction: TextInputAction.search,
                     style: const TextStyle(
-                      color: AppTheme.darkSlate,
+                      color: Colors.white,
                       fontSize: 15,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Ketik nama kota (misal: Jakarta, Surabaya)...',
+                      hintText: 'Ketik nama kota (misal: Jakarta, Bandung)...',
                       hintStyle: const TextStyle(
-                        color: AppTheme.mutedSlate,
+                        color: AppTheme.textMuted,
                         fontSize: 14,
                       ),
                       prefixIcon: const Icon(
                         CupertinoIcons.search,
-                        color: AppTheme.skyBlue,
+                        color: AppTheme.primary,
                         size: 20,
                       ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(
                                 CupertinoIcons.clear_circled_solid,
-                                color: AppTheme.mutedSlate,
+                                color: AppTheme.textMuted,
                                 size: 18,
                               ),
                               onPressed: () {
@@ -139,13 +138,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircularProgressIndicator(
-                              color: AppTheme.skyBlue,
+                              color: AppTheme.primary,
                             ),
                             SizedBox(height: 16),
                             Text(
                               'Mencari kota di Open-Meteo...',
                               style: TextStyle(
-                                color: AppTheme.mutedSlate,
+                                color: AppTheme.textMuted,
                                 fontSize: 14,
                               ),
                             ),
@@ -162,19 +161,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                   const Icon(
                                     CupertinoIcons.exclamationmark_circle,
                                     size: 48,
-                                    color: Colors.amber,
+                                    color: AppTheme.secondary,
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
                                     locationVM.errorMessage!,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                      color: AppTheme.darkSlate,
+                                      color: Colors.white,
                                       fontSize: 14,
                                     ),
                                   ),
                                   const SizedBox(height: 16),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.primary,
+                                      foregroundColor: Colors.white,
+                                    ),
                                     onPressed: () => locationVM.searchCities(
                                       _searchController.text,
                                     ),
@@ -214,23 +217,23 @@ class _SearchScreenState extends State<SearchScreen> {
               Icon(
                 CupertinoIcons.search,
                 size: 64,
-                color: Colors.grey.shade400,
+                color: AppTheme.cardBorder,
               ),
               const SizedBox(height: 16),
               const Text(
                 'Kota Tidak Ditemukan',
                 style: TextStyle(
-                  color: AppTheme.darkSlate,
+                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Periksa kembali ejaan nama kota atau coba gunakan nama kota yang lebih besar.',
+                'Periksa kembali ejaan nama kota atau gunakan nama kota yang lebih umum.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppTheme.mutedSlate,
+                  color: AppTheme.textMuted,
                   fontSize: 13,
                 ),
               ),
@@ -241,7 +244,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
       itemCount: results.length,
       itemBuilder: (context, index) {
         final item = results[index];
@@ -249,49 +252,48 @@ class _SearchScreenState extends State<SearchScreen> {
 
         return Card(
           margin: const EdgeInsets.only(bottom: 10),
-          elevation: 0,
-          color: Colors.white,
+          color: AppTheme.cardSurface,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-            side: const BorderSide(color: Color(0xFFE2E8F0)),
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: AppTheme.cardBorder),
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 18,
-              vertical: 8,
+              vertical: 6,
             ),
             leading: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppTheme.skyBlue.withOpacity(0.1),
+                color: AppTheme.primary.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 CupertinoIcons.location_solid,
-                color: AppTheme.skyBlue,
-                size: 20,
+                color: AppTheme.primary,
+                size: 18,
               ),
             ),
             title: Text(
               item.name,
               style: const TextStyle(
-                color: AppTheme.darkSlate,
+                color: Colors.white,
                 fontWeight: FontWeight.w700,
-                fontSize: 16,
+                fontSize: 15,
               ),
             ),
             subtitle: Text(
               item.subtitle,
               style: const TextStyle(
-                color: AppTheme.mutedSlate,
-                fontSize: 13,
+                color: AppTheme.textMuted,
+                fontSize: 12,
               ),
             ),
             trailing: IconButton(
               icon: Icon(
                 isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                color: isFav ? AppTheme.accentRed : AppTheme.mutedSlate,
-                size: 24,
+                color: isFav ? AppTheme.primary : AppTheme.textMuted,
+                size: 22,
               ),
               onPressed: () {
                 locationVM.toggleFavorite(item);
@@ -322,25 +324,25 @@ class _SearchScreenState extends State<SearchScreen> {
     LocationViewModel locationVM,
   ) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       children: [
         // 1. KOTA FAVORIT SECTION
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(
+                Icon(
                   CupertinoIcons.heart_fill,
-                  size: 18,
-                  color: AppTheme.accentRed,
+                  size: 16,
+                  color: AppTheme.primary,
                 ),
-                const SizedBox(width: 8),
-                const Text(
+                SizedBox(width: 8),
+                Text(
                   'Lokasi Favorit',
                   style: TextStyle(
-                    color: AppTheme.darkSlate,
-                    fontSize: 16,
+                    color: Colors.white,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -349,8 +351,8 @@ class _SearchScreenState extends State<SearchScreen> {
             Text(
               '${favorites.length} kota',
               style: const TextStyle(
-                color: AppTheme.mutedSlate,
-                fontSize: 13,
+                color: AppTheme.textMuted,
+                fontSize: 12,
               ),
             ),
           ],
@@ -361,24 +363,24 @@ class _SearchScreenState extends State<SearchScreen> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppTheme.cardSurface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppTheme.cardBorder),
             ),
-            child: Row(
+            child: const Row(
               children: [
                 Icon(
                   CupertinoIcons.heart,
-                  color: Colors.grey.shade400,
-                  size: 28,
+                  color: AppTheme.textMuted,
+                  size: 24,
                 ),
-                const SizedBox(width: 14),
-                const Expanded(
+                SizedBox(width: 14),
+                Expanded(
                   child: Text(
                     'Belum ada lokasi favorit. Cari kota dan tekan ikon hati untuk menyimpannya.',
                     style: TextStyle(
-                      color: AppTheme.mutedSlate,
-                      fontSize: 13,
+                      color: AppTheme.textMuted,
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -394,11 +396,10 @@ class _SearchScreenState extends State<SearchScreen> {
               final fav = favorites[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
-                elevation: 0,
-                color: Colors.white,
+                color: AppTheme.cardSurface,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(color: Color(0xFFE2E8F0)),
+                  borderRadius: BorderRadius.circular(18),
+                  side: const BorderSide(color: AppTheme.cardBorder),
                 ),
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
@@ -408,35 +409,35 @@ class _SearchScreenState extends State<SearchScreen> {
                   leading: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppTheme.skyBlue.withOpacity(0.12),
+                      color: AppTheme.primary.withOpacity(0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       CupertinoIcons.location_solid,
-                      color: AppTheme.skyBlue,
-                      size: 18,
+                      color: AppTheme.primary,
+                      size: 16,
                     ),
                   ),
                   title: Text(
                     fav.name,
                     style: const TextStyle(
-                      color: AppTheme.darkSlate,
+                      color: Colors.white,
                       fontWeight: FontWeight.w700,
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                   ),
                   subtitle: Text(
                     fav.subtitle,
                     style: const TextStyle(
-                      color: AppTheme.mutedSlate,
+                      color: AppTheme.textMuted,
                       fontSize: 12,
                     ),
                   ),
                   trailing: IconButton(
                     icon: const Icon(
                       CupertinoIcons.heart_fill,
-                      color: AppTheme.accentRed,
-                      size: 22,
+                      color: AppTheme.primary,
+                      size: 20,
                     ),
                     onPressed: () {
                       locationVM.toggleFavorite(fav);
@@ -456,19 +457,19 @@ class _SearchScreenState extends State<SearchScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
-                  const Icon(
+                  Icon(
                     CupertinoIcons.time,
-                    size: 18,
-                    color: AppTheme.mutedSlate,
+                    size: 16,
+                    color: AppTheme.secondary,
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
+                  SizedBox(width: 8),
+                  Text(
                     'Riwayat Pencarian',
                     style: TextStyle(
-                      color: AppTheme.darkSlate,
-                      fontSize: 16,
+                      color: Colors.white,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -479,7 +480,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: const Text(
                   'Hapus Semua',
                   style: TextStyle(
-                    color: AppTheme.skyBlue,
+                    color: AppTheme.primary,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -493,21 +494,21 @@ class _SearchScreenState extends State<SearchScreen> {
             runSpacing: 8,
             children: recentSearches.map((term) {
               return ActionChip(
-                backgroundColor: Colors.white,
+                backgroundColor: AppTheme.cardSurface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(color: Color(0xFFE2E8F0)),
+                  side: const BorderSide(color: AppTheme.cardBorder),
                 ),
                 avatar: const Icon(
                   CupertinoIcons.search,
-                  size: 14,
-                  color: AppTheme.skyBlue,
+                  size: 13,
+                  color: AppTheme.secondary,
                 ),
                 label: Text(
                   term,
                   style: const TextStyle(
-                    color: AppTheme.darkSlate,
-                    fontSize: 13,
+                    color: AppTheme.textSecondary,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -520,14 +521,14 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
 
-        const SizedBox(height: 32),
+        const SizedBox(height: 28),
 
         // 3. KOTA POPULER DI INDONESIA
         const Text(
           'Kota Populer',
           style: TextStyle(
-            color: AppTheme.darkSlate,
-            fontSize: 16,
+            color: Colors.white,
+            fontSize: 15,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -537,18 +538,18 @@ class _SearchScreenState extends State<SearchScreen> {
           runSpacing: 8,
           children: [
             LocationModel(
-              name: 'Jakarta',
-              latitude: -6.2088,
-              longitude: 106.8456,
-              country: 'Indonesia',
-              admin1: 'DKI Jakarta',
-            ),
-            LocationModel(
               name: 'Purwokerto',
               latitude: -7.42139,
               longitude: 109.23444,
               country: 'Indonesia',
               admin1: 'Jawa Tengah',
+            ),
+            LocationModel(
+              name: 'Jakarta',
+              latitude: -6.2088,
+              longitude: 106.8456,
+              country: 'Indonesia',
+              admin1: 'DKI Jakarta',
             ),
             LocationModel(
               name: 'Bandung',
@@ -580,21 +581,21 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ].map((city) {
             return ActionChip(
-              backgroundColor: Colors.white,
+              backgroundColor: AppTheme.cardSurface,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: const BorderSide(color: Color(0xFFCBD5E1)),
+                side: const BorderSide(color: AppTheme.cardBorder),
               ),
               avatar: const Icon(
                 CupertinoIcons.placemark_fill,
-                size: 14,
-                color: AppTheme.skyBlue,
+                size: 13,
+                color: AppTheme.primary,
               ),
               label: Text(
                 city.name,
                 style: const TextStyle(
-                  color: AppTheme.darkSlate,
-                  fontSize: 13,
+                  color: Colors.white,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -8,7 +8,7 @@ class WeatherService {
 
   WeatherService({http.Client? client}) : _client = client ?? http.Client();
 
-  /// Fetches real-time weather and 7-day forecast from Open-Meteo REST API (HTTP GET)
+  /// Fetches real-time weather, hourly forecast, and 7-day outlook from Open-Meteo REST API
   Future<WeatherModel> getWeather({
     required double latitude,
     required double longitude,
@@ -18,6 +18,7 @@ class WeatherService {
       'latitude=$latitude&'
       'longitude=$longitude&'
       'current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&'
+      'hourly=temperature_2m,weather_code,precipitation_probability&'
       'daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&'
       'timezone=auto',
     );

@@ -3,6 +3,7 @@ class WeatherModel {
   final double longitude;
   final String timezone;
   final CurrentWeather current;
+  final List<HourlyForecast> hourly;
   final List<DailyForecast> daily;
 
   WeatherModel({
@@ -10,12 +11,40 @@ class WeatherModel {
     required this.longitude,
     required this.timezone,
     required this.current,
+    required this.hourly,
     required this.daily,
   });
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     final currentJson = json['current'] as Map<String, dynamic>? ?? {};
     final dailyJson = json['daily'] as Map<String, dynamic>? ?? {};
+    final hourlyJson = json['hourly'] as Map<String, dynamic>? ?? {};
+
+    // Parse hourly lists (take next 24 hours)
+    final hourlyTimes = (hourlyJson['time'] as List<dynamic>?) ?? [];
+    final hourlyTemps = (hourlyJson['temperature_2m'] as List<dynamic>?) ?? [];
+    final hourlyCodes = (hourlyJson['weather_code'] as List<dynamic>?) ?? [];
+    final hourlyProbs =
+        (hourlyJson['precipitation_probability'] as List<dynamic>?) ?? [];
+
+    final List<HourlyForecast> hourlyList = [];
+    final hourlyCount = hourlyTimes.length > 24 ? 24 : hourlyTimes.length;
+    for (int i = 0; i < hourlyCount; i++) {
+      hourlyList.add(
+        HourlyForecast(
+          time: hourlyTimes[i]?.toString() ?? '',
+          temperature: (hourlyTemps.length > i)
+              ? (hourlyTemps[i] as num?)?.toDouble() ?? 0.0
+              : 0.0,
+          weatherCode: (hourlyCodes.length > i)
+              ? (hourlyCodes[i] as num?)?.toInt() ?? 0
+              : 0,
+          precipitationProbability: (hourlyProbs.length > i)
+              ? (hourlyProbs[i] as num?)?.toInt() ?? 0
+              : 0,
+        ),
+      );
+    }
 
     // Parse daily lists
     final times = (dailyJson['time'] as List<dynamic>?) ?? [];
@@ -52,6 +81,7 @@ class WeatherModel {
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
       timezone: json['timezone'] ?? '',
       current: CurrentWeather.fromJson(currentJson),
+      hourly: hourlyList,
       daily: dailyList,
     );
   }
@@ -88,6 +118,20 @@ class CurrentWeather {
       windSpeed: (json['wind_speed_10m'] as num?)?.toDouble() ?? 0.0,
     );
   }
+}
+
+class HourlyForecast {
+  final String time;
+  final double temperature;
+  final int weatherCode;
+  final int precipitationProbability;
+
+  HourlyForecast({
+    required this.time,
+    required this.temperature,
+    required this.weatherCode,
+    required this.precipitationProbability,
+  });
 }
 
 class DailyForecast {
