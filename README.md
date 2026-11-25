@@ -32,8 +32,7 @@
 
 Tonton demonstrasi lengkap jalannya aplikasi Atmos_134, mulai dari splash screen, pengambilan data live cuaca, pencarian kota interaktif, penyimpanan lokal kota favorit, hingga pengaturan unit:
 
-> 🔗 **Tautan YouTube Demo**: [https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE](https://www.youtube.com/watch?v=YOUR_VIDEO_ID_HERE)  
-> *(Silakan ganti URL di atas dengan tautan video YouTube demo aplikasi Anda)*
+> 🔗 **Tautan YouTube Demo**: 
 
 ---
 
@@ -44,7 +43,7 @@ Berikut adalah dokumentasi visual dari setiap layar (*screen*) yang terdapat pad
 ### 1. Layar Utama (Splash & Home Screen)
 | 🚀 Splash Screen | 🌤️ Home Screen (Hero & Hourly) | 📊 Home Screen (Metrics & 7-Day) |
 | :---: | :---: | :---: |
-| <img src="screenshots/splash_screen.png" width="240" alt="Splash Screen" /> | <img src="screenshots/home_screen_top.png" width="240" alt="Home Screen Hero & Hourly" /> | <img src="screenshots/home_screen_bottom.png" width="240" alt="Home Screen Metrics & 7-Day Outlook" /> |
+| <img width="716" height="1600" alt="image" src="https://github.com/user-attachments/assets/335f19f2-02ad-4658-9aae-f8a9266cc4e5" /> | <img width="716" height="1600" alt="image" src="https://github.com/user-attachments/assets/6545e728-6e2a-4584-a9a1-a87c9e7ec6d4" /> | <img width="716" height="1600" alt="image" src="https://github.com/user-attachments/assets/7d372f02-86cc-456e-9ec1-c7a49ff030a9" /> |
 | *Layar pembuka dengan animasi logo Atmos & tagline resmi* | *Hero overview card cuaca live, status WMO, & hourly forecast* | *Grid 4 metrik cuaca wajib & visual bar rentang suhu 7 hari* |
 
 ---
@@ -52,11 +51,8 @@ Berikut adalah dokumentasi visual dari setiap layar (*screen*) yang terdapat pad
 ### 2. Layar Pencarian & Pengaturan (Search & Settings Screen)
 | 🔍 Search Screen (Live API Query) | ⭐ Search Screen (Favorit & Riwayat) | ⚙️ Settings Screen |
 | :---: | :---: | :---: |
-| <img src="screenshots/search_screen_query.png" width="240" alt="Search Screen Query" /> | <img src="screenshots/search_screen_favorites.png" width="240" alt="Search Screen Favorites" /> | <img src="screenshots/settings_screen.png" width="240" alt="Settings Screen" /> |
+| <img width="716" height="1600" alt="image" src="https://github.com/user-attachments/assets/b31106b9-b2f5-4f30-9653-d63ca39eb5a9" /> | <img width="716" height="1600" alt="image" src="https://github.com/user-attachments/assets/3b57ab4a-10b2-47be-8de3-6a812013b771" /> | <img width="358" height="800" alt="image" src="https://github.com/user-attachments/assets/c66435e5-5aa7-47f5-8104-0f89bd04b48f" /><img width="358" height="800" alt="image" src="https://github.com/user-attachments/assets/dfef7546-97b6-40f7-9a84-265722194bbe" /> |
 | *Pencarian kota live ke Open-Meteo Geocoding API* | *Daftar kota favorit tersimpan & riwayat pencarian lokal* | *Preferensi unit suhu (°C/°F), angin, tekanan, & clear cache* |
-
-> 💡 **Petunjuk Pengisian Gambar:**  
-> Simpan tangkapan layar perangkat Anda ke dalam folder `screenshots/` di dalam repositori ini dengan nama file yang sesuai (`splash_screen.png`, `home_screen_top.png`, `home_screen_bottom.png`, `search_screen_query.png`, `search_screen_favorites.png`, dan `settings_screen.png`), atau gunakan tautan gambar GitHub attachment.
 
 ---
 
