@@ -32,7 +32,7 @@
 
 Tonton demonstrasi lengkap jalannya aplikasi Atmos_134, mulai dari splash screen, pengambilan data live cuaca, pencarian kota interaktif, penyimpanan lokal kota favorit, hingga pengaturan unit:
 
-> 🔗 **Tautan YouTube Demo**: 
+> 🔗 **Tautan YouTube Demo**: https://youtu.be/mVrm8mYBn9E?si=eoPH7Rt-bMp5JJui 
 
 ---
 
